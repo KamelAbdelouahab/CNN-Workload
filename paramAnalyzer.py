@@ -1,3 +1,6 @@
+# Kamel ABDELOUAHAB
+# DREAM - Institut Pascal
+
 import sys
 import os
 import io
