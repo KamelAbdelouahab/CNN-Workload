@@ -15,7 +15,7 @@ CAFFE_PYTHON_LIB    = CAFFE_DIRNAME+'/python'
 sys.path.insert(0, CAFFE_PYTHON_LIB)
 import caffe;
 
-def extractHist(protoFile, modelFile):
+def extractKernelHist(protoFile, modelFile):
     cnn          = caffe.Net(protoFile,1,weights=modelFile)
     netParam     = cnn.params
     netHist      = np.array([])
@@ -31,11 +31,33 @@ def extractHist(protoFile, modelFile):
             netHist,bins  = np.histogram(netAllParam[...].ravel(),bins=200)
     return netHist,bins
 
+def dataHist(protoTest, modelFile):
+    cnn          = caffe.Net(protoTest,1,weights=modelFile)
+    cnn.forward()
+    netParam     = cnn.params
+    netHist      = np.array([])
+    bins         = np.array([])
+    netAllParam  = np.array([])
+    netData		 = cnn.blobs
+    # Print CNN shape
+    print ">> Network parameter shape"
+    for p in netParam:
+        if 'conv' in p:
+		layerParam    = netParam[p][0].data
+		print p + " " + str(netData[p].data.shape)
+		layerData     = netData[p].data.ravel()
+		hist, bins = np.histogram(layerData,bins=50)
+		width = 0.7 * (bins[1] - bins[0])
+		center = (bins[:-1] + bins[1:]) / 2
+		plt.bar(center, hist, align='center', width=width)
+		plt.show()
+
 def saveHist(hist,bins,name):
-    width = 0.7 * (bins[1] - bins[0])
+    width = 0.2 * (bins[1] - bins[0])
     center = (bins[:-1] + bins[1:]) / 2
     fig, ax = plt.subplots()
     ax.bar(center, hist, align='center', width=width)
+    fig.show()
     name =  name + ".png"
     fig.savefig(name)
 
@@ -91,16 +113,24 @@ if __name__ == '__main__':
     if (len(sys.argv) == 3):
         protoFile = sys.argv[1]
         modelFile = sys.argv[2]
-        #~ hist,bins  = extractHist(protoFile,modelFile);
-        #~ saveHist(hist,bins,modelFile)
+        hist,bins  = extractKernelHist(protoFile,modelFile);
+        saveHist(hist,bins,modelFile)
     else:
-        print (">> Backdoor ! ")
-        nBits=6;
-        protoFile = '/home/kamel/dev/caffe/models/lenet5/deploy.prototxt'
-        modelFile = '/home/kamel/dev/caffe/models/lenet5/qnet_iter_1000.caffemodel'
-        kernelStats =  specialKernel(nBits,
-									 protoFile,
-									 modelFile)
-        print kernelStats
-        drawPie(kernelStats)
+		print (">> Backdoor ! ")
+		nBits=7;
+		print ("HELP : >> paramAnalyser [.prototxt] [.caffemodel]")
+		protoFile = '/home/kamel/dev/caffe/models/cifar10/deploy.prototxt'
+		protoTest = '/home/kamel/dev/caffe/models/cifar10/train_val.prototxt'
+		modelFile = '/home/kamel/dev/caffe/models/cifar10/net.caffemodel'
+		
+		#~ kernelStats =  specialKernel(nBits,protoFile,modelFile)
+		#~ drawPie(kernelStats)
+		
+		# Kernel Histogram
+		#~ hist,bins  = extractKernelHist(protoFile,modelFile);
+		#~ saveHist(hist,bins,modelFile)
+		
+		# Data prop Histogram
+		dataHist(protoTest,modelFile);
+		#~ saveHist(data_hist,data_bins,'~/Desktop/cifar_act')
         #~ print (">> paramAnalyser [.prototxt] [.caffemodel]")
