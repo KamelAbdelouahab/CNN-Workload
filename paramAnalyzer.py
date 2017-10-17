@@ -16,21 +16,24 @@ sys.path.insert(0, CAFFE_PYTHON_LIB)
 import caffe;
 
 def extractKernelHist(protoFile, modelFile):
-    cnn          = caffe.Net(protoFile,1,weights=modelFile)
-    netParam     = cnn.params
-    netHist      = np.array([])
-    bins         = np.array([])
-    netAllParam  = np.array([])
-    # Print CNN shape
-    print ">> Network parameter shape"
-    for p in netParam:
-        if 'conv' in p:
-            layerParam    = netParam[p][0].data
-            print p + " " + str(layerParam.shape)
-            netAllParam   = np.append(netAllParam,layerParam[...].ravel())
-            netHist,bins  = np.histogram(netAllParam[...].ravel(),bins=200)
-    return netHist,bins
-
+	cnn          = caffe.Net(protoFile,1,weights=modelFile)
+	netParam     = cnn.params
+	layers       = cnn.blobs
+	layer_id = 0;
+	netHist      = np.array([])
+	bins         = np.array([])
+	netAllParam  = np.array([])
+	# Print CNN shape
+	print ">> Network parameter shape"
+	for p in layers:
+		if (cnn.layers[layer_id].type == 'Convolution'):
+			layerParam    = netParam[p][0].data
+			print p + " " + str(layerParam.shape)
+			netAllParam   = np.append(netAllParam,layerParam[...].ravel())
+			netHist,bins  = np.histogram(netAllParam[...].ravel(),bins=200)
+		layer_id = layer_id +1;
+return netHist,bins
+	
 def dataHist(protoTest, modelFile):
     cnn          = caffe.Net(protoTest,1,weights=modelFile)
     cnn.forward()
@@ -88,7 +91,7 @@ def specialKernel(nBits,protoFile,modelFile):
 
 	return [kernelZero,kernelOne,kernelPow2,kernelAll]
 
-def drawPie(kernelStats,svgFilename='mesouda'):
+def drawPie(kernelStats,svgFilename='outPie'):
     data = [kernelStats[0],
             kernelStats[1],
             kernelStats[2],
@@ -115,22 +118,3 @@ if __name__ == '__main__':
         modelFile = sys.argv[2]
         hist,bins  = extractKernelHist(protoFile,modelFile);
         saveHist(hist,bins,modelFile)
-    else:
-		print (">> Backdoor ! ")
-		nBits=7;
-		print ("HELP : >> paramAnalyser [.prototxt] [.caffemodel]")
-		protoFile = '/home/kamel/dev/caffe/models/cifar10/deploy.prototxt'
-		protoTest = '/home/kamel/dev/caffe/models/cifar10/train_val.prototxt'
-		modelFile = '/home/kamel/dev/caffe/models/cifar10/net.caffemodel'
-		
-		#~ kernelStats =  specialKernel(nBits,protoFile,modelFile)
-		#~ drawPie(kernelStats)
-		
-		# Kernel Histogram
-		#~ hist,bins  = extractKernelHist(protoFile,modelFile);
-		#~ saveHist(hist,bins,modelFile)
-		
-		# Data prop Histogram
-		dataHist(protoTest,modelFile);
-		#~ saveHist(data_hist,data_bins,'~/Desktop/cifar_act')
-        #~ print (">> paramAnalyser [.prototxt] [.caffemodel]")
