@@ -117,6 +117,9 @@ if __name__ == '__main__':
 		print "Computational workload of FC layers: ", human_format(totalFcWorkload),"MACs"
 		print "Number of parameters of FC layers: ", human_format(totalFcMemory)
 		print "------------------------------------------------------------------------"
+		print "Total Computational workload: ", human_format(totalWorkload),"MACs"
+		print "Total Number of parameters: ", human_format(totalMemory)
+		print "------------------------------------------------------------------------"
 		#~ #ConvWorkload = totalConvWorkload/totalWorkload
 		#~ #ConvMemory   = totalConvMemory/totalMemory
 		#~ #print "Convolutions",ConvWorkload,"Computations and ",ConvMemory,"Memory"
