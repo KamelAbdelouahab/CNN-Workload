@@ -1,5 +1,14 @@
-# Kamel ABDELOUAHAB
-# DREAM - Institut Pascal
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
+##----------------------------------------------------------------------------
+## Title      : benchmarkModel
+##----------------------------------------------------------------------------
+## File       : benchmarkModel.py
+## Author     : Kamel Abdelouahab
+## Company    : Institut Pascal - DREAM
+## Last update: 18-10-2017
+##----------------------------------------------------------------------------
 
 import sys
 import os
