@@ -1,8 +1,8 @@
-# paramAnalyzer
-A script to analyse popular CNN models and their computational load
+# CNN Workload Benchmark
+A script to evaluate the computational workload of popular CNN models winning ILSVRC.
 
 To use : 
-`python cnnAnalyzer.py <.prototxt> <.caffemodel>`
+`python benchmarkModel.py <.prototxt> <.caffemodel>`
 
 Please be sure to download the models using the appropriate script
 
