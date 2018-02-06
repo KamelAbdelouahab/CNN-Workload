@@ -55,7 +55,8 @@ def workload(protoFile, modelFile):
 	for l in cnn._layer_names:
 		layerId = list(cnn._layer_names).index(l)
 		layerType =  cnn.layers[layerId].type
-		
+		if (layerType == 'Data' or layerType == 'Input'):
+			inDataSize =  blobs[l].data.shape	
 		if (layerType == 'Convolution'):
 			convLayerName = np.append(convLayerName,l)		# Layer Name			
 			N = params[l][0].data.shape[0]
@@ -82,7 +83,7 @@ def workload(protoFile, modelFile):
 			numPool = numPool + 1
 			
 	fcMemory = fcWorkload
-	return convWorkload,fcWorkload, convMemory, fcMemory, numPool
+	return inDataSize, convWorkload,fcWorkload, convMemory, fcMemory, numPool
 
 # Found it in Stackoverflow, thanks for the time dude ...
 def human_format(num):
@@ -99,7 +100,7 @@ if __name__ == '__main__':
 		protoFile = sys.argv[1]
 		modelFile = sys.argv[2]
 		#~ listLayers(protoFile,modelFile)
-		[convWorkload,fcWorkload, convMemory, fcMemory, numPool] =  workload(protoFile,modelFile)
+		[inDataSize, convWorkload,fcWorkload, convMemory, fcMemory, numPool] =  workload(protoFile,modelFile)
 		
 		# Results
 		## Computations
@@ -117,6 +118,7 @@ if __name__ == '__main__':
 		print "------------------------------------------------------------------------"
 		print "Model: "+ modelFile
 		print "Number of conv layers :", numConv
+		print "Input Data Size :", inDataSize
 		print "Computational workload of conv layers: ", human_format(totalConvWorkload), "MACs"
 		print "Number of parameters of conv layers: ", human_format(totalConvMemory)
 		print "------------------------------------------------------------------------"
@@ -129,8 +131,8 @@ if __name__ == '__main__':
 		print "Total Computational workload: ", human_format(totalWorkload),"MACs"
 		print "Total Number of parameters: ", human_format(totalMemory)
 		print "------------------------------------------------------------------------"
-		#~ #ConvWorkload = totalConvWorkload/totalWorkload
-		#~ #ConvMemory   = totalConvMemory/totalMemory
-		#~ #print "Convolutions",ConvWorkload,"Computations and ",ConvMemory,"Memory"
+    else:
+		print("Not enought arguments")
+		print("python Workload.py <path_to_proto> <path_to_caffemodel>")
 		
 		
