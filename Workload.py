@@ -7,7 +7,7 @@
 ## File       : Workload.py
 ## Author     : Kamel Abdelouahab
 ## Company    : Institut Pascal - DREAM
-## Last update: 30-04-2018
+## Last update: 11-05-2018
 ##----------------------------------------------------------------------------
 
 import sys
@@ -23,12 +23,12 @@ CAFFE_PYTHON_LIB = CAFFE_ROOT+'/python'
 sys.path.insert(0, CAFFE_PYTHON_LIB)
 os.environ['GLOG_minloglevel'] = '2' # Supresses Display on console
 import caffe;
-
+sys.path.insert(0,"C:/Users/Kamel/dev/mvcnn/src")
 
 def listLayers(protoFile, modelFile):
-    cnn           = caffe.Net(protoFile,1,weights=modelFile)
-    params          = cnn.params
-    blobs         = cnn.blobs
+    cnn = caffe.Net(protoFile,1,weights=modelFile)
+    params = cnn.params
+    blobs = cnn.blobs
     #~ print("\n".join(map(str, cnn._layer_names)))
     #~ print blobs
     for layerName in cnn._layer_names:
@@ -39,12 +39,12 @@ def listLayers(protoFile, modelFile):
 
 def workload(protoFile, modelFile):
     convLayerName = np.array([])
-    convWorkload  = np.array([])
-    convMemory      = np.array([])
+    convWorkload = np.array([])
+    convMemory = np.array([])
 
-    fcLayerName      = np.array([])
-    fcWorkload       = np.array([])
-    fcMemory       = np.array([])
+    fcWorkload = np.array([])
+    fcLayerName = np.array([])
+    fcMemory = np.array([])
 
     numPool = 0
 
