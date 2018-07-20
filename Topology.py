@@ -46,7 +46,7 @@ def Topology(protoFile, modelFile):
                     if (cnn.layers[layerId+i].type == 'Sigmoid'):
                         non_lin = non_lin + "+" + "Sigmoid"
                     if (cnn.layers[layerId+i].type == 'Pooling'):
-                        non_lin = non_lin + "+" + "Pooling"
+                        non_lin = non_lin + "+" + "Pool"
                     if (cnn.layers[layerId+i].type == 'LRN' or cnn.layers[layerId+i].type == "BatchNorm"):
                         non_lin = non_lin + "+" + "BN" 					
                 except IndexError:
