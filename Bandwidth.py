@@ -20,12 +20,18 @@ def plotDataTransfer(net):
 		layer_type =  net.layers[layer_id].type
 		if (layer_type == 'Input'):
 			conv_layer_name.append(l)
-			# Compute ammount of data transfered between layers in Mega Bytes
 			conv_layer_bandwidth.append(net.blobs[l].data.size/1000000)
 		if (layer_type == 'Convolution'):
 			conv_layer_name.append(l)
-			# Compute ammount of data transfered between layers in Mega Bytes
-			conv_layer_bandwidth.append(4*net.blobs[l].data.size/1000000)
+			conv_layer_bandwidth.append(net.blobs[l].data.size/1000000)
+		if (layer_type == 'Pooling'):
+			conv_layer_name.append(l)
+			conv_layer_bandwidth.append(net.blobs[l].data.size/1000000)
+	i = 0;
+	for l in conv_layer_name:
+		print("layer %s, %2.2f MB/img" %(l,conv_layer_bandwidth[i]));
+		i += 1
+
 	pos = np.arange(len(conv_layer_bandwidth))
 	fig = plt.figure()
 	# plt.rc('text', usetex=True)
