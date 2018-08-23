@@ -18,12 +18,14 @@ import math
 import matplotlib.pyplot as plt
 import pylab as P
 
-CAFFE_ROOT       = os.environ['CAFFE_ROOT']
-CAFFE_PYTHON_LIB = CAFFE_ROOT+'/python'
-sys.path.insert(0, CAFFE_PYTHON_LIB)
+try:
+    CAFFE_ROOT = os.environ['CAFFE_ROOT']
+    CAFFE_PYTHON_LIB = CAFFE_ROOT+'/python'
+    sys.path.insert(0, CAFFE_PYTHON_LIB)
+except KeyError:
+    print("Warning: CAFFE_ROOT environment variable not set")
 os.environ['GLOG_minloglevel'] = '2' # Supresses Display on console
 import caffe;
-sys.path.insert(0,"C:/Users/Kamel/dev/mvcnn/src")
 
 def listLayers(protoFile, modelFile):
     cnn = caffe.Net(protoFile,1,weights=modelFile)
@@ -65,7 +67,8 @@ def workload(protoFile, modelFile):
             U = blobs[l].data.shape[2]
             nonZeros = np.count_nonzero(params[l][0].data)
             # Convolution Workload
-            thisLayerWorkload = U*U*nonZeros #~ thisLayerWorkload = U*U*K*K*N*C
+            #thisLayerWorkload = U*U*nonZeros #~ 
+            thisLayerWorkload = U*U*K*K*N*C
             convWorkload = np.append(convWorkload,thisLayerWorkload)
             # Param size
             thisLayerMemory = nonZeros
@@ -80,7 +83,7 @@ def workload(protoFile, modelFile):
             fcWorkload = np.append(fcWorkload,thisLayerWorkload)
 
         if (layerType == 'Pooling'):
-            numPool = numPool + 1
+            numPool +=  1
 
     fcMemory = fcWorkload
     return inDataSize, convWorkload,fcWorkload, convMemory, fcMemory, numPool
