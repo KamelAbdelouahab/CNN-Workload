@@ -6,7 +6,6 @@ import io
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from matplotlib.font_manager import _rebuild; _rebuild()
 from matplotlib import rcParams
 params = {
     'grid.color' : 'k',
@@ -53,8 +52,7 @@ true_vgg16      = np.array(vgg16)
 true_darknet    = np.array(darknet)
 true_yolov3tiny = np.array(yolov3tiny)
 
-plt.figure(figsize=(12
-, 4))
+plt.figure(figsize=(12, 4))
 plt.grid()
 plt.bar(layers + 0.0 * width, true_alexnet, width, color='blue')
 plt.bar(layers - 1.0 * width, true_vgg16, width, color='green')
