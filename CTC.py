@@ -11,7 +11,7 @@ params = {
     'grid.color' : 'k',
     'grid.linestyle': 'dashdot',
     'grid.linewidth': 0.6,
-    'font.family': 'Garamond',
+    'font.family': 'Linux Biolium',
     'axes.labelsize': 8,
     'font.size': 8,
     'legend.fontsize': 15,
